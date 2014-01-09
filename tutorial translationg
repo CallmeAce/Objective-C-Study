@@ -1,0 +1,51 @@
+Chapter：Writing Custom Class
+
+Class中的属性property
+在ios第一版中，属性是一个新机制，声明变量时，必须声明与之对应的实例变量
+
+@interface MyViewControlller : UIViewController
+{
+  UIButton *myButton;
+
+}
+
+@property (nonatomic, retain) UIButton * myButton;
+
+@end
+
+在苹果将默认编译器从GCC转为LLVM（low level virtual machine）后，从此不再需要为属性声明实例
+
+变量了。当LLVM发现没有匹配实例变量的属性，它将自动创建一个以下划线开头的实例变量。
+
+@interface MyViewControlller : UIViewController
+
+@property (nonatomic, retain) UIButton * myButton;
+
+@end
+
+在MyViewController.m文件中，编译器自动生成实例变量_myButton。
+
+访问变量可通过直接访问_myButton实现或调用self.myButton
+
+注意：self.myButton实际是调用myButton属性的getter/setter方法。c++中的点是直接访问成员变量
+
+.h 文件
+@interface MyViewController : UIViewController
+{
+  NSString * name;
+}
+@end
+
+.m文件，调用时直接 self->name
+oc的点是调用对象setter和getter方法的一种快捷方式。例如：dealie.blah = greeble 完全等价于
+[dealie.blah setBlah:greeble];
+
+现在也不再需要在.m文件中写synthesize myButton,系统会自动为你生成setter,getter方法
+
+在实际项目中一般这么写.m文件
+@synthesize myButton;
+这么写了后，编译器会自动生成myButton实例变量，以及相应的getter/setter方法。如果不写这一句，
+则自动生成_myButton实例变量，及相应setter/getter方法
+
+
+
